@@ -1,5 +1,8 @@
 <Solution>
   <Folder Name="/Src/">
+    <Project Path="ProjectManagement.Application/ProjectManagement.Application.csproj" Id="56185934-aab0-4278-abcb-441e97bce9e3" />
+    <Project Path="ProjectManagement.Domain/ProjectManagement.Domain.csproj" Id="8b184f9e-6f3a-46a7-b0e9-1bdd1ed9de2c" />
+    <Project Path="ProjectManagement.Infrastructure/ProjectManagement.Infrastructure.csproj" Id="562b4755-ce16-4014-83dd-eb11262f7936" />
     <Project Path="ProjectManagement.Web/ProjectManagement.Web.csproj" Id="4cbba664-0bfd-45ea-beb8-931f7fac492a" />
   </Folder>
 </Solution>
