@@ -19,6 +19,8 @@ namespace ProjectManagement.Infrastructure
 
             //Register Repositories
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<ITaskRepository, TaskRepository>();
 
             return services;
         }

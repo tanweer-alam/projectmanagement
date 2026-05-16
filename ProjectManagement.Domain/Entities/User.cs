@@ -12,9 +12,12 @@ namespace ProjectManagement.Domain.Entities
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public UserRole Role { get; set; }
-        //Relationships
-        public ICollection<Project> OwnedProjects { get; set; } = new List<Project>(); //Navigation
-        public ICollection<TaskItem> AssignedTasks { get; set; } = new List<TaskItem>(); //Navigation
+
+        //Navigation properties
+        private readonly List<Project> _ownedProjects = new();
+        public IReadOnlyCollection<Project> OwnedProjects => _ownedProjects.AsReadOnly();
+        private readonly List<TaskItem> _assignedTasks = new();
+        public IReadOnlyCollection<TaskItem> AssignedTasks => _assignedTasks.AsReadOnly();
 
         public User() : base() { }
         public User(Guid id, string email, string firstName, string lastName, UserRole role) : base(id)
@@ -24,6 +27,10 @@ namespace ProjectManagement.Domain.Entities
             LastName = lastName;
             Role = role;
         }
+
+        public bool IsEmployee => Role == UserRole.Employee;
+        public bool IsAdmin => Role == UserRole.Admin;
+        public string FullName => $"{FirstName} {LastName}";
 
     }
 }

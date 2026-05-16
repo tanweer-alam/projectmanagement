@@ -14,7 +14,7 @@ namespace ProjectManagement.Domain.Interfaces
         Task<IEnumerable<TaskItem>> GetByProjectIdAsync(Guid projectId, CancellationToken cancellationToken = default);
         Task<IEnumerable<TaskItem>> GetByAssigneeIdAsync(Guid assigneeId, CancellationToken cancellationToken = default);
         Task<IEnumerable<TaskItem>> GetByStatusAsync(TaskItemStatus status, CancellationToken cancellationToken = default);
-        Task AddAsync(TaskItem taskItem, CancellationToken cancellationToken = default);
+        void Add(TaskItem taskItem, CancellationToken cancellationToken = default);
         void Update(TaskItem taskItem);
         void Remove(TaskItem taskItem);
     }
