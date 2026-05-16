@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectManagement.Domain.Interfaces;
 using ProjectManagement.Infrastructure.Persistence;
+using ProjectManagement.Infrastructure.Persistence.Repositories;
 
 namespace ProjectManagement.Infrastructure
 {
@@ -15,6 +16,9 @@ namespace ProjectManagement.Infrastructure
                 options.UseSqlServer(connectionString));
             // Register repositories, services, etc. here
             services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<ProjectManagementDbContext>());
+
+            //Register Repositories
+            services.AddScoped<IUserRepository, UserRepository>();
 
             return services;
         }

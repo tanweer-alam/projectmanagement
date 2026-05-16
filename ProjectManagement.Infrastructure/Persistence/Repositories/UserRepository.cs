@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Domain.Entities;
+using ProjectManagement.Domain.Enums;
 using ProjectManagement.Domain.Interfaces;
 
 namespace ProjectManagement.Infrastructure.Persistence.Repositories
@@ -31,6 +32,24 @@ namespace ProjectManagement.Infrastructure.Persistence.Repositories
                 .ThenBy(u => u.FirstName)
                 .ToListAsync(cancellationToken);
         }
+        public async Task<IEnumerable<User>> GetByRoleAsync(UserRole role, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Users
+                .Where(u => u.Role == role)
+                .OrderBy(u => u.LastName)
+                .ThenBy(u => u.FirstName)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<User>> GetAllEmployeesAsync(CancellationToken cancellationToken = default)
+        {
+            return await GetByRoleAsync(UserRole.Employee, cancellationToken);
+        }
+
+        public Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken = default)
+        {
+            return _dbContext.Users.AnyAsync(u => u.Email == email.ToLowerInvariant(), cancellationToken);
+        }
 
         public async Task AddAsync(User user, CancellationToken cancellationToken = default)
         {
@@ -46,5 +65,7 @@ namespace ProjectManagement.Infrastructure.Persistence.Repositories
         {
             _dbContext.Users.Remove(user);
         }
+
+        
     }
 }
