@@ -12,6 +12,7 @@ namespace ProjectManagement.Domain.Entities
         //Relationships
         public Guid OwnerId { get; set; } //FK
         public User Owner { get; set; } = null!; //Navigation
+        public ICollection<TaskItem> TaskItems { get; set; } = new List<TaskItem>();
 
         public Project() : base() { }
         public Project(Guid id, string name, string description, Guid ownerid) : base(id)

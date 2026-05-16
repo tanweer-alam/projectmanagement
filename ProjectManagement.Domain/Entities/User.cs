@@ -12,6 +12,10 @@ namespace ProjectManagement.Domain.Entities
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public UserRole Role { get; set; }
+        //Relationships
+        public ICollection<Project> OwnedProjects { get; set; } = new List<Project>(); //Navigation
+        public ICollection<TaskItem> AssignedTasks { get; set; } = new List<TaskItem>(); //Navigation
+
         public User() : base() { }
         public User(Guid id, string email, string firstName, string lastName, UserRole role) : base(id)
         {
@@ -20,5 +24,6 @@ namespace ProjectManagement.Domain.Entities
             LastName = lastName;
             Role = role;
         }
+
     }
 }
