@@ -14,8 +14,8 @@ public class TaskItem : Entity<Guid>
     //Relationships
     public Guid ProjectId { get; set; } //FK
     public Guid AssigneeId { get; set; } //FK
-    public Project Project { get; set; } = null!;
-    public User Assignee { get; set; } = null!;
+    public Project Project { get; set; } = null!; //Navigation
+    public User Assignee { get; set; } = null!; //Navigation
 
     public TaskItem() { }
 
