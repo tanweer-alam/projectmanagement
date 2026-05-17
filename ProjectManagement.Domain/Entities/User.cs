@@ -8,13 +8,16 @@ namespace ProjectManagement.Domain.Entities
 {
     public class User : Entity<Guid>
     {
-        public string Email { get; set; } = string.Empty;
-        public string FirstName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-        public UserRole Role { get; set; }
-        //Relationships
-        public ICollection<Project> OwnedProjects { get; set; } = new List<Project>(); //Navigation
-        public ICollection<TaskItem> AssignedTasks { get; set; } = new List<TaskItem>(); //Navigation
+        public string Email { get; private set; } = string.Empty;
+        public string FirstName { get; private set; } = string.Empty;
+        public string LastName { get; private set; } = string.Empty;
+        public UserRole Role { get; private set; }
+
+        //Navigation properties
+        private readonly List<Project> _ownedProjects = new();
+        public IReadOnlyCollection<Project> OwnedProjects => _ownedProjects.AsReadOnly();
+        private readonly List<TaskItem> _assignedTasks = new();
+        public IReadOnlyCollection<TaskItem> AssignedTasks => _assignedTasks.AsReadOnly();
 
         public User() : base() { }
         public User(Guid id, string email, string firstName, string lastName, UserRole role) : base(id)
@@ -25,5 +28,21 @@ namespace ProjectManagement.Domain.Entities
             Role = role;
         }
 
+        public bool IsEmployee => Role == UserRole.Employee;
+        public bool IsAdmin => Role == UserRole.Admin;
+        public string FullName => $"{FirstName} {LastName}";
+
+        public static User Create(string email, string firstName, string lastName, UserRole role = UserRole.Employee)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                throw new ArgumentException("Email cannot be empty", nameof(email));
+            if (string.IsNullOrWhiteSpace(firstName))
+                throw new ArgumentException("First name cannot be empty", nameof(firstName));
+            if (string.IsNullOrWhiteSpace(lastName))
+                throw new ArgumentException("Last name cannot be empty", nameof(lastName));
+
+            return new User(Guid.NewGuid(), email.ToLowerInvariant().Trim(), firstName.Trim(),
+                lastName.Trim(), role);
+        }
     }
 }

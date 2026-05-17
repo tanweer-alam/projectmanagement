@@ -1,0 +1,63 @@
+﻿@page
+@model ProjectManagement.Web.Pages.Projects.CreateModel
+@{
+    ViewData["Title"] = "Create Project";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="mb-4" style="font-size: 2.5rem; font-weight: 700;">Create New Project</h1>
+
+            <form method="post" class="needs-validation">
+                <!-- Project Name -->
+                <div class="mb-4">
+                    <label for="name" class="form-label fw-bold">Project Name</label>
+                    <input 
+                        type="text" 
+                        class="form-control form-control-lg" 
+                        id="name" 
+                        name="name" 
+                        placeholder="Enter project name"
+                        required 
+                        style="border: 1px solid #dee2e6; padding: 12px 15px;">
+                </div>
+
+                <!-- Description -->
+                <div class="mb-4">
+                    <label for="description" class="form-label fw-bold">Description</label>
+                    <textarea 
+                        class="form-control form-control-lg" 
+                        id="description" 
+                        name="description" 
+                        rows="5" 
+                        placeholder="Enter project description"
+                        style="border: 1px solid #dee2e6; padding: 12px 15px;"></textarea>
+                </div>
+
+                <!-- Owner -->
+                <div class="mb-4">
+                    <label for="ownerId" class="form-label fw-bold">Owner</label>
+                    <select 
+                        class="form-select form-select-lg" 
+                        id="ownerId" 
+                        name="ownerId" 
+                        required
+                        style="border: 1px solid #dee2e6; padding: 12px 15px;">
+                        <option value="">Select an owner...</option>
+                        @foreach (var user in Model.Admins)
+                        {
+                            <option value="@user.Id">@user.FirstName @user.LastName</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex gap-2 mt-5">
+                    <button type="submit" class="btn btn-primary-custom btn-lg">Create Project</button>
+                    <a href="/Index" class="btn btn-secondary-custom btn-lg">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

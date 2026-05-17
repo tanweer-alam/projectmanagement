@@ -29,3 +29,206 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* Dashboard Stats Cards */
+.stat-card {
+  border-radius: 8px;
+  padding: 30px 20px;
+  color: white;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 150px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card.stat-blue {
+  background: linear-gradient(135deg, #0052cc, #0066ff);
+}
+
+.stat-card.stat-cyan {
+  background: linear-gradient(135deg, #00a8cc, #00c9d7);
+}
+
+.stat-card.stat-green {
+  background: linear-gradient(135deg, #1d7874, #2a9d8f);
+}
+
+.stat-card.stat-gold {
+  background: linear-gradient(135deg, #d4a017, #f4d03f);
+  color: #333;
+}
+
+.stat-card .stat-number {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.stat-card .stat-label {
+  font-size: 0.95rem;
+  opacity: 0.95;
+}
+
+/* Progress Bar */
+.progress-container {
+  margin: 20px 0;
+}
+
+.progress-bar-custom {
+  background: linear-gradient(90deg, #f4d03f, #d4a017);
+  height: 25px;
+  border-radius: 4px;
+}
+
+/* Task Status Badge */
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  min-width: 70px;
+}
+
+.status-done {
+  background-color: #28a745;
+  color: white;
+}
+
+.status-todo {
+  background-color: #6c757d;
+  color: white;
+}
+
+.status-inprogress {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Project Details Page */
+.project-header {
+  margin-bottom: 30px;
+}
+
+.project-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.project-description {
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.info-box {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 20px;
+  margin: 15px 0;
+}
+
+.info-box .info-label {
+  color: #6c757d;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.info-box .info-value {
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 500;
+}
+
+/* Tables */
+.table-custom {
+  margin-top: 20px;
+}
+
+.table-custom thead {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.table-custom thead th {
+  font-weight: 600;
+  color: #333;
+  padding: 15px;
+  border: none;
+}
+
+.table-custom tbody td {
+  padding: 15px;
+  vertical-align: middle;
+}
+
+.table-custom tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Buttons */
+.btn-primary-custom {
+  background-color: #0052cc;
+  border-color: #0052cc;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-block;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary-custom:hover {
+  background-color: #0041a3;
+  color: white;
+  text-decoration: none;
+}
+
+.btn-secondary-custom {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-block;
+  transition: background-color 0.2s ease;
+}
+
+.btn-secondary-custom:hover {
+  background-color: #5a6268;
+  color: white;
+  text-decoration: none;
+}
+
+/* Back Button */
+.back-button {
+  margin-bottom: 20px;
+}
+
+/* Task Section */
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+/* Action column */
+.action-column {
+  text-align: right;
+}
