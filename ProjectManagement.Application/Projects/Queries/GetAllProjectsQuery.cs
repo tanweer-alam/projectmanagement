@@ -18,7 +18,7 @@ namespace ProjectManagement.Application.Projects.Queries
         }
         public async Task<IReadOnlyList<ProjectSummaryDto>> Handle(GetAllProjectsQuery request, CancellationToken cancellationToken)
         {
-            var projects = await _projectRepository.GetAllAsync(cancellationToken);
+            var projects = await _projectRepository.GetAllWithTasksAsync(cancellationToken);
             return projects.Select(p => new ProjectSummaryDto(
                 p.Id,
                 p.Name,
