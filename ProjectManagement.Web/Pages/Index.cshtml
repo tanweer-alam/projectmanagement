@@ -1,113 +1,179 @@
-﻿@page
+@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = User.IsInRole("Admin") ? "Dashboard" : "My Tasks";
 }
 
 <div class="container-fluid">
-    <!-- Page Header -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <h1 class="display-5 fw-bold">Dashboard</h1>
-        </div>
-        <div class="col-md-6 text-end">
-            <a href="/Projects/Create" class="btn btn-primary-custom">Create Project</a>
-        </div>
-    </div>
-
-    <!-- Statistics Cards -->
-    @if (Model.Dashboard != null)
+    @if (User.IsInRole("Admin"))
     {
-        <div class="row mb-5">
-            <div class="col-md-6 col-lg-3 mb-3">
-                <div class="stat-card stat-blue">
-                    <div class="stat-number">@Model.Dashboard.TotalProjects</div>
-                    <div class="stat-label">Total Projects</div>
-                </div>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h1 class="display-5 fw-bold">Dashboard</h1>
             </div>
-            <div class="col-md-6 col-lg-3 mb-3">
-                <div class="stat-card stat-cyan">
-                    <div class="stat-number">@Model.Dashboard.TotalTask</div>
-                    <div class="stat-label">Total Tasks</div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3 mb-3">
-                <div class="stat-card stat-green">
-                    <div class="stat-number">@Model.Dashboard.Completedtasks</div>
-                    <div class="stat-label">Completed Tasks</div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3 mb-3">
-                <div class="stat-card stat-gold">
-                    <div class="stat-number">@Model.Dashboard.AverageProgress.ToString("F1")%</div>
-                    <div class="stat-label">Average Progress</div>
-                </div>
+            <div class="col-md-6 text-end">
+                <a href="/Projects/Create" class="btn btn-primary-custom">Create Project</a>
             </div>
         </div>
 
-        <!-- Projects Section -->
-        <div class="row">
-            <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="section-title">Projects</h2>
+        @if (Model.Dashboard != null)
+        {
+            <div class="row mb-5">
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="stat-card stat-blue">
+                        <div class="stat-number">@Model.Dashboard.TotalProjects</div>
+                        <div class="stat-label">Total Projects</div>
+                    </div>
                 </div>
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="stat-card stat-cyan">
+                        <div class="stat-number">@Model.Dashboard.TotalTask</div>
+                        <div class="stat-label">Total Tasks</div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="stat-card stat-green">
+                        <div class="stat-number">@Model.Dashboard.Completedtasks</div>
+                        <div class="stat-label">Completed Tasks</div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="stat-card stat-gold">
+                        <div class="stat-number">@Model.Dashboard.AverageProgress.ToString("F1")%</div>
+                        <div class="stat-label">Average Progress</div>
+                    </div>
+                </div>
+            </div>
 
-                @if (Model.Dashboard.Projects.Count > 0)
-                {
-                    <div class="table-responsive">
-                        <table class="table table-custom">
-                            <thead>
-                                <tr>
-                                    <th>Project Name</th>
-                                    <th>Description</th>
-                                    <th class="text-center">Tasks</th>
-                                    <th class="text-center">Progress</th>
-                                    <th class="action-column">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var project in Model.Dashboard.Projects)
-                                {
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="section-title">Projects</h2>
+                    </div>
+
+                    @if (Model.Dashboard.Projects.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-custom">
+                                <thead>
                                     <tr>
-                                        <td>
-                                            <a href="/Projects/Details/@project.Id" class="text-decoration-none fw-bold">
-                                                @project.Name
-                                            </a>
-                                        </td>
-                                        <td>@project.Description</td>
-                                        <td class="text-center">@project.CompletedTaskCount / @project.TotalTaskCount</td>
-                                        <td class="text-center">
-                                            <div class="progress" style="height: 20px;">
-                                                @{
-                                                    var progressWidth = project.Progress > 0 ? Math.Round(project.Progress) : 0;
-                                                }
-                                                <div class="progress-bar-custom" role="progressbar" style="width: @progressWidth%;" aria-valuenow="@progressWidth" aria-valuemin="0" aria-valuemax="100">
-                                                    @progressWidth%
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="action-column">
-                                            <a href="/Projects/Details/@project.Id" class="btn btn-sm btn-primary-custom">View</a>
-                                        </td>
+                                        <th>Project Name</th>
+                                        <th>Description</th>
+                                        <th class="text-center">Tasks</th>
+                                        <th class="text-center">Progress</th>
+                                        <th class="action-column">Actions</th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                }
-                else
-                {
-                    <div class="alert alert-info">
-                        <p>No projects found. <a href="/Projects/Create">Create your first project</a></p>
-                    </div>
-                }
+                                </thead>
+                                <tbody>
+                                    @foreach (var project in Model.Dashboard.Projects)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <a href="/Projects/Details/@project.Id" class="text-decoration-none fw-bold">
+                                                    @project.Name
+                                                </a>
+                                            </td>
+                                            <td>@project.Description</td>
+                                            <td class="text-center">@project.CompletedTaskCount / @project.TotalTaskCount</td>
+                                            <td class="text-center">
+                                                <div class="progress" style="height: 20px;">
+                                                    @{
+                                                        var progressWidth = project.Progress > 0 ? Math.Round(project.Progress) : 0;
+                                                    }
+                                                    <div class="progress-bar-custom" role="progressbar" style="width: @progressWidth%;" aria-valuenow="@progressWidth" aria-valuemin="0" aria-valuemax="100">
+                                                        @progressWidth%
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="action-column">
+                                                <a href="/Projects/Details/@project.Id" class="btn btn-sm btn-primary-custom">View</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <p>No projects found. <a href="/Projects/Create">Create your first project</a></p>
+                        </div>
+                    }
+                </div>
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="alert alert-warning">
+                <p>Unable to load dashboard data.</p>
+            </div>
+        }
     }
     else
     {
-        <div class="alert alert-warning">
-            <p>Unable to load dashboard data.</p>
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="display-5 fw-bold">My Tasks</h1>
+            </div>
         </div>
+
+        @if (Model.AssignedTasks.Count > 0)
+        {
+            <div class="table-responsive">
+                <table class="table table-custom">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Started</th>
+                            <th>Completed</th>
+                            <th class="action-column text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var task in Model.AssignedTasks)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@task.Title</strong>
+                                    <br />
+                                    <small class="text-muted">@task.Description</small>
+                                </td>
+                                <td>@task.StatusName</td>
+                                <td>@(task.CreatedAt?.ToString("MMM dd, yyyy HH:mm:ss") ?? "-")</td>
+                                <td>@(task.StartedAt?.ToString("MMM dd, yyyy HH:mm:ss") ?? "-")</td>
+                                <td>@(task.CompletedAt?.ToString("MMM dd, yyyy HH:mm:ss") ?? "-")</td>
+                                <td class="text-center">
+                                    @if (task.StatusName != "Done")
+                                    {
+                                        <form method="post" asp-page-handler="UpdateStatus" class="d-inline">
+                                            <input type="hidden" name="taskId" value="@task.Id" />
+                                            @if (task.StatusName == "ToDo")
+                                            {
+                                                <input type="hidden" name="newStatus" value="1" />
+                                                <button type="submit" class="btn btn-outline-primary btn-sm">Start</button>
+                                            }
+                                            else if (task.StatusName == "InProgress")
+                                            {
+                                                <input type="hidden" name="newStatus" value="2" />
+                                                <button type="submit" class="btn btn-outline-success btn-sm">Complete</button>
+                                            }
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                <p>No tasks are assigned to you.</p>
+            </div>
+        }
     }
 </div>
