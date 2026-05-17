@@ -70,7 +70,7 @@
                                     <th>Created</th>
                                     <th>Started</th>
                                     <th>Completed</th>
-                                    <th class="action-column">Actions</th>
+                                    <th class="action-column text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -93,12 +93,21 @@
                                         <td>@(task.CreatedAt?.ToString("MMM dd, yyyy") ?? "-")</td>
                                         <td>@(task.StartedAt?.ToString("MMM dd, yyyy") ?? "-")</td>
                                         <td>@(task.CompletedAt?.ToString("MMM dd, yyyy") ?? "-")</td>
-                                        <td class="action-column">
-                                            <div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-sm btn-primary-custom" data-bs-toggle="modal" data-bs-target="#updateStatusModal" onclick="setTaskId('@task.Id')">
-                                                    Start
-                                                </button>
-                                            </div>
+                                        <td class="text-center">
+                                            @if(task.StatusName != "Done")
+                                            {
+                                                <form method="post" asp-page-handler="UpdateStatus" class="d-inline">
+                                                    <input type="hidden" name="taskId" value="@task.Id" />
+                                                    @if(task.StatusName == "ToDo"){
+                                                        <input type="hidden" name="newStatus" value="2" />
+                                                        <button type="submit" class="btn btn-outline-primary btn-sm">Start</button>
+                                                    }
+                                                    else if(task.StatusName == "InProgress"){
+                                                        <input type="hidden" name="newStatus" value="2"/>
+                                                        <button type="submit" class="btn btn-outline-success btn-sm">Complete</button>
+                                                    }
+                                                </form>
+                                            }
                                         </td>
                                     </tr>
                                 }
