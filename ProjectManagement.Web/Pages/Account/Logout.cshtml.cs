@@ -14,7 +14,7 @@ namespace ProjectManagement.Web.Pages.Account
         public IActionResult OnPost()
         {
             return SignOut(
-                new AuthenticationProperties { RedirectUri = "http://localhost:5066" },
+                new AuthenticationProperties { RedirectUri = Url.Content("~/") },
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 OpenIdConnectDefaults.AuthenticationScheme
                 );
