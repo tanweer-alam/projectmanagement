@@ -1,0 +1,199 @@
+﻿@page "{id}"
+@model ProjectManagement.Web.Pages.Projects.DetailsModel
+@{
+    ViewData["Title"] = "Project Details";
+}
+
+<div class="container-fluid">
+    @if (Model.Project != null)
+    {
+        <!-- Project Header with Back Button -->
+        <div class="d-flex justify-content-between align-items-start mb-4">
+            <div class="flex-grow-1">
+                <h1 class="project-title">@Model.Project.Name</h1>
+                <p class="project-description">@Model.Project.Description</p>
+            </div>
+            <a href="/Index" class="btn btn-secondary-custom">Back to Dashboard</a>
+        </div>
+
+        <!-- Project Info Cards Row -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="info-box">
+                    <div class="info-label">Progress</div>
+                    <div style="margin: 15px 0;">
+                        <div class="progress" style="height: 30px;">
+                            @{
+                                var progressWidth = Model.Project.Progress > 0 ? Math.Round(Model.Project.Progress) : 0;
+                            }
+                            <div class="progress-bar-custom" role="progressbar" style="width: @progressWidth%;" aria-valuenow="@progressWidth" aria-valuemin="0" aria-valuemax="100">
+                                @progressWidth%
+                            </div>
+                        </div>
+                        <small class="text-muted">@Model.Project.CompletedTaskCount of @Model.Project.TotalTaskCount tasks completed</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-box">
+                    <div class="info-label">Owner</div>
+                    <div class="info-value">@Model.Project.OwnerName</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-box">
+                    <div class="info-label">Created</div>
+                    <div class="info-value">@Model.Project.CreatedAt.ToString("MMMM dd, yyyy")</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tasks Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="section-title">Tasks</h2>
+                    <button type="button" class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+                        Add Task
+                    </button>
+                </div>
+
+                @if (Model.Project.Tasks.Count > 0)
+                {
+                    <div class="table-responsive">
+                        <table class="table table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Status</th>
+                                    <th>Assigned To</th>
+                                    <th>Created</th>
+                                    <th>Started</th>
+                                    <th>Completed</th>
+                                    <th class="action-column">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var task in Model.Project.Tasks)
+                                {
+                                    <tr>
+                                        <td>
+                                            <strong>@task.Title</strong>
+                                            <br />
+                                            <small class="text-muted">@task.Description</small>
+                                        </td>
+                                        <td>
+                                            @{
+                                                var statusClass = task.Status.ToString() == "Done" ? "status-done" : 
+                                                                  task.Status.ToString() == "InProgress" ? "status-inprogress" : "status-todo";
+                                            }
+                                            <span class="status-badge @statusClass">@task.StatusName</span>
+                                        </td>
+                                        <td>@task.AssigneeName</td>
+                                        <td>@(task.CreatedAt?.ToString("MMM dd, yyyy") ?? "-")</td>
+                                        <td>@(task.StartedAt?.ToString("MMM dd, yyyy") ?? "-")</td>
+                                        <td>@(task.CompletedAt?.ToString("MMM dd, yyyy") ?? "-")</td>
+                                        <td class="action-column">
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-sm btn-primary-custom" data-bs-toggle="modal" data-bs-target="#updateStatusModal" onclick="setTaskId('@task.Id')">
+                                                    Start
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info">
+                        <p>No tasks yet. <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#addTaskModal">Add your first task</button></p>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            <p>Project not found.</p>
+            <a href="/Index" class="btn btn-secondary-custom">Back to Dashboard</a>
+        </div>
+    }
+</div>
+
+<!-- Add Task Modal -->
+<div class="modal fade" id="addTaskModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="taskTitle" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="taskTitle" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="taskDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="taskDescription" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="taskAssignee" class="form-label">Assign To</label>
+                        <select class="form-select" id="taskAssignee" name="assigneeId" required>
+                            <option value="">Select an employee</option>
+                            @foreach (var employee in Model.Employees)
+                            {
+                                <option value="@employee.Id">@employee.FirstName @employee.LastName</option>
+                            }
+                        </select>
+                    </div>
+                    <input type="hidden" name="projectId" value="@Model.Project?.Id">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary-custom">Add Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Update Task Status Modal -->
+<div class="modal fade" id="updateStatusModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Task Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" asp-page-handler="UpdateStatus">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="taskStatus" class="form-label">Status</label>
+                        <select class="form-select" id="taskStatus" name="newStatus" required>
+                            <option value="0">To Do</option>
+                            <option value="1">In Progress</option>
+                            <option value="2">Done</option>
+                        </select>
+                    </div>
+                    <input type="hidden" id="taskIdInput" name="taskId" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary-custom">Update Status</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setTaskId(taskId) {
+        document.getElementById('taskIdInput').value = taskId;
+    }
+</script>
