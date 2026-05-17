@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ProjectManagement.Application.DTOs;
@@ -7,6 +8,7 @@ using ProjectManagement.Application.Users.Queries;
 
 namespace ProjectManagement.Web.Pages.Projects
 {
+    [Authorize(Policy = "AdminOnly")]
     public class CreateModel : PageModel
     {
         private readonly IMediator _mediator;

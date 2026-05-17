@@ -1,9 +1,11 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Application.Tasks.Commands;
 using ProjectManagement.Application.Tasks.Queries;
 using ProjectManagement.Domain.Enums;
+using ProjectManagement.Domain.Interfaces;
+using System.Security.Claims;
 
 namespace ProjectManagement.Web.Controllers
 {
@@ -13,14 +15,31 @@ namespace ProjectManagement.Web.Controllers
     public class TasksController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public TasksController(IMediator mediator)
+        private readonly IUserRepository _userRepository;
+        private readonly ITaskRepository _taskRepository;
+
+        public TasksController(
+            IMediator mediator,
+            IUserRepository userRepository,
+            ITaskRepository taskRepository)
         {
             _mediator = mediator;
+            _userRepository = userRepository;
+            _taskRepository = taskRepository;
         }
 
         [HttpGet("assignee/{assigneeId:guid}")]
         public async Task<IActionResult> GetByAssignee(Guid assigneeId, CancellationToken cancellationToken)
         {
+            if (!User.IsInRole("Admin"))
+            {
+                var currentUser = await GetCurrentUserAsync(cancellationToken);
+                if (currentUser is null || currentUser.Id != assigneeId)
+                {
+                    return Forbid();
+                }
+            }
+
             var tasks = await _mediator.Send(new GetTasksByAssigneeQuery(assigneeId), cancellationToken);
             return Ok(tasks);
         }
@@ -29,20 +48,21 @@ namespace ProjectManagement.Web.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateTaskRequest request, CancellationToken cancellationToken)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
             try
             {
                 var command = new CreateTaskCommand(
-                request.ProjectId,
-                request.Title,
-                request.Description,
-                request.AssigneeId);
+                    request.ProjectId,
+                    request.Title,
+                    request.Description,
+                    request.AssigneeId);
 
                 var taskId = await _mediator.Send(command, cancellationToken);
-                return CreatedAtAction(null, new {id = taskId}, new { id = taskId});
+                return CreatedAtAction(null, new { id = taskId }, new { id = taskId });
             }
             catch (Exception e)
             {
@@ -51,15 +71,28 @@ namespace ProjectManagement.Web.Controllers
         }
 
         [HttpPut("{id:guid}/status")]
-        [Authorize(Roles = "Admin,Employee")]
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateTaskStatusRequest request, CancellationToken cancellationToken)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
             try
             {
+                var task = await _taskRepository.GetByIdAsync(id, cancellationToken);
+                if (task is null)
+                {
+                    return NotFound();
+                }
+
+                var currentUser = await GetCurrentUserAsync(cancellationToken);
+                if (currentUser is null || task.AssigneeId != currentUser.Id)
+                {
+                    return Forbid();
+                }
+
                 var command = new UpdateTaskStatusCommand(id, request.Status);
                 await _mediator.Send(command, cancellationToken);
                 return Ok(new { message = "Task status updated successfully" });
@@ -69,8 +102,19 @@ namespace ProjectManagement.Web.Controllers
                 return BadRequest($"Failed to update status: {e.Message}");
             }
         }
+
+        private async Task<ProjectManagement.Domain.Entities.User?> GetCurrentUserAsync(CancellationToken cancellationToken)
+        {
+            var email = User.FindFirst(ClaimTypes.Email)?.Value
+                ?? User.FindFirst("email")?.Value;
+
+            return string.IsNullOrWhiteSpace(email)
+                ? null
+                : await _userRepository.GetByEmailAsync(email.ToLowerInvariant(), cancellationToken);
+        }
     }
 }
+
 public record CreateTaskRequest(
     Guid ProjectId,
     string Title,

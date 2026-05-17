@@ -20,6 +20,7 @@ namespace ProjectManagement.Web.Controllers
         }
 
         [HttpGet("dashboard")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetDashboard(CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new GetDashboardQuery(), cancellationToken);
@@ -27,6 +28,7 @@ namespace ProjectManagement.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
             var projects = await _mediator.Send(new GetAllProjectsQuery(), cancellationToken);
@@ -34,6 +36,7 @@ namespace ProjectManagement.Web.Controllers
         }
 
         [HttpGet("{id:guid}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         {
             var project = await _mediator.Send(new GetProjectDetailQuery(id), cancellationToken);
