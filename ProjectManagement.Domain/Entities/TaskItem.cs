@@ -5,17 +5,17 @@ namespace ProjectManagement.Domain.Entities;
 
 public class TaskItem : Entity<Guid>
 {
-    public string Title { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public TaskItemStatus Status { get; set; }
-    public DateTime? StartedAt { get; set; }
-    public DateTime? CompletedAt { get; set; }
+    public string Title { get; private set; } = string.Empty;
+    public string Description { get; private set; } = string.Empty;
+    public TaskItemStatus Status { get; private set; }
+    public DateTime? StartedAt { get; private set; }
+    public DateTime? CompletedAt { get; private set; }
 
     //Relationships
-    public Guid ProjectId { get; set; } //FK
-    public Guid AssigneeId { get; set; } //FK
-    public Project Project { get; set; } = null!; //Navigation
-    public User Assignee { get; set; } = null!; //Navigation
+    public Guid ProjectId { get; private set; } //FK
+    public Guid AssigneeId { get; private set; } //FK
+    public Project Project { get; private set; } = null!; //Navigation
+    public User Assignee { get; private set; } = null!; //Navigation
 
     public TaskItem() { }
 

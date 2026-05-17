@@ -1,11 +1,8 @@
-﻿using MediatR;
+using MediatR;
+using ProjectManagement.Application.Common.Caching;
 using ProjectManagement.Application.Common.Interfaces;
 using ProjectManagement.Domain.Enums;
 using ProjectManagement.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
 
 namespace ProjectManagement.Application.Tasks.Commands
 {
@@ -15,11 +12,18 @@ namespace ProjectManagement.Application.Tasks.Commands
     {
         private readonly ITaskRepository _taskRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public UpdateTaskStatusCommandHandler(ITaskRepository taskRepository, IUnitOfWork unitOfWork)
+        private readonly IDashboardCache _dashboardCache;
+
+        public UpdateTaskStatusCommandHandler(
+            ITaskRepository taskRepository,
+            IUnitOfWork unitOfWork,
+            IDashboardCache dashboardCache)
         {
             _taskRepository = taskRepository;
             _unitOfWork = unitOfWork;
+            _dashboardCache = dashboardCache;
         }
+
         public async Task<bool> Handle(UpdateTaskStatusCommand request, CancellationToken cancellationToken)
         {
             var task = await _taskRepository.GetByIdAsync(request.TaskId, cancellationToken)
@@ -29,8 +33,11 @@ namespace ProjectManagement.Application.Tasks.Commands
 
             _taskRepository.Update(task);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return true; // Status updated successfully
+            _dashboardCache.Remove();
+
+            return true;
         }
     }
 }
-    
+
+

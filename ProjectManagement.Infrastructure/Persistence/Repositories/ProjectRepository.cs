@@ -20,13 +20,16 @@ namespace ProjectManagement.Infrastructure.Persistence.Repositories
 
         public async Task<Project?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _dbContext.Projects.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+            return await _dbContext.Projects
+                .Include(p => p.Owner)
+                .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
         }
 
         public async Task<Project?> GetByIdWithTasksAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Projects
                 .Include(p => p.Tasks)
+                    .ThenInclude(t => t.Assignee)
                 .Include(p => p.Owner)
                 .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
         }
@@ -35,7 +38,9 @@ namespace ProjectManagement.Infrastructure.Persistence.Repositories
         {
             return await _dbContext.Projects
                 .Include(p => p.Tasks)
+                    .ThenInclude(t => t.Assignee)
                 .Include(p => p.Owner)
+                .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync(cancellationToken);
         }
 

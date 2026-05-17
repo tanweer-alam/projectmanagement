@@ -7,12 +7,12 @@ namespace ProjectManagement.Domain.Entities
 {
     public class Project : AggregateRoot<Guid>
     {
-        public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        public string Name { get; private set; } = string.Empty;
+        public string Description { get; private set; } = string.Empty;
         //FK
-        public Guid OwnerId { get; set; }
+        public Guid OwnerId { get; private set; }
         //Navigation properties
-        public User Owner { get; set; } = null!;
+        public User Owner { get; private set; } = null!;
         private readonly List<TaskItem> _tasks = new();
         public IReadOnlyCollection<TaskItem> Tasks => _tasks.AsReadOnly();
 

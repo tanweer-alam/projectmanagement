@@ -1,6 +1,8 @@
 using ProjectManagement.Application;
+using ProjectManagement.Application.Common.Caching;
 using ProjectManagement.Infrastructure;
 using ProjectManagement.Infrastructure.Auth;
+using ProjectManagement.Web.Caching;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(connectionString);
 builder.Services.AddAuthenticationServices(builder.Configuration);
+builder.Services.AddSingleton<IDashboardCache, MemoryDashboardCache>();
 
 builder.Services.AddRazorPages(options =>
 {
