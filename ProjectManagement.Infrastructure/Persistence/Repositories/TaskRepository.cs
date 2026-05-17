@@ -39,6 +39,7 @@ namespace ProjectManagement.Infrastructure.Persistence.Repositories
             return await _dbContext.Tasks
                 .Include(t => t.Assignee)
                 .Where(t => t.ProjectId == projectId)
+                .OrderByDescending(t => t.CreatedAt)
                 .ToListAsync(cancellationToken);
         }
 
@@ -48,6 +49,7 @@ namespace ProjectManagement.Infrastructure.Persistence.Repositories
                 .Where(t => t.AssigneeId == assigneeId)
                 .Include(t => t.Project)
                 .Include(t => t.Assignee)
+                .OrderByDescending(t => t.CreatedAt)
                 .ToListAsync(cancellationToken);
         }
 
@@ -57,6 +59,7 @@ namespace ProjectManagement.Infrastructure.Persistence.Repositories
                 .Where(t => t.Status == status)
                 .Include(t => t.Project)
                 .Include(t => t.Assignee)
+                .OrderByDescending(t => t.CreatedAt)
                 .ToListAsync(cancellationToken);
         }
 
