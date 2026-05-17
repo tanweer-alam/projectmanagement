@@ -1,14 +1,15 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ProjectManagement.Application.DTOs;
 using ProjectManagement.Application.Projects.Queries;
 using ProjectManagement.Application.Tasks.Commands;
 using ProjectManagement.Application.Users.Queries;
-using ProjectManagement.Domain.Enums;
 
 namespace ProjectManagement.Web.Pages.Projects
 {
+    [Authorize(Policy = "AdminOnly")]
     public class DetailsModel : PageModel
     {
         private readonly IMediator _mediator;
@@ -37,6 +38,11 @@ namespace ProjectManagement.Web.Pages.Projects
             Guid assigneeId,
             CancellationToken cancellationToken)
         {
+            if (!User.IsInRole("Admin"))
+            {
+                return Forbid();
+            }
+
             try
             {
                 var command = new CreateTaskCommand(
@@ -53,20 +59,5 @@ namespace ProjectManagement.Web.Pages.Projects
             return RedirectToPage(new { id = projectId });
         }
 
-        public async Task<IActionResult> OnPostUpdateStatusAsync(
-            Guid taskId,
-            int newStatus,
-            CancellationToken cancellationToken)
-        {
-            try
-            {
-                await _mediator.Send(new UpdateTaskStatusCommand(taskId, (TaskItemStatus)newStatus), cancellationToken);
-            }
-            catch (Exception)
-            {
-            }
-            var projectId = RouteData.Values["id"]?.ToString();
-            return RedirectToPage(new { id = projectId });
-        }
     }
 }
