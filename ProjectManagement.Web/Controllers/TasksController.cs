@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Application.Tasks.Commands;
 using ProjectManagement.Application.Tasks.Queries;
@@ -8,6 +9,7 @@ namespace ProjectManagement.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TasksController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -24,6 +26,7 @@ namespace ProjectManagement.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateTaskRequest request, CancellationToken cancellationToken)
         {
             if(!ModelState.IsValid)
@@ -48,6 +51,7 @@ namespace ProjectManagement.Web.Controllers
         }
 
         [HttpPut("{id:guid}/status")]
+        [Authorize(Roles = "Admin,Employee")]
         public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateTaskStatusRequest request, CancellationToken cancellationToken)
         {
             if(!ModelState.IsValid)

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Application.Projects.Commands;
@@ -8,6 +9,7 @@ namespace ProjectManagement.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProjectsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -43,7 +45,7 @@ namespace ProjectManagement.Web.Controllers
         }
 
         [HttpPost]
-        //should be for Admin only
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] CreateProjectRequest request, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
