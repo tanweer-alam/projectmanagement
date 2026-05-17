@@ -90,16 +90,16 @@
                                             <span class="status-badge @statusClass">@task.StatusName</span>
                                         </td>
                                         <td>@task.AssigneeName</td>
-                                        <td>@(task.CreatedAt?.ToString("MMM dd, yyyy") ?? "-")</td>
-                                        <td>@(task.StartedAt?.ToString("MMM dd, yyyy") ?? "-")</td>
-                                        <td>@(task.CompletedAt?.ToString("MMM dd, yyyy") ?? "-")</td>
+                                         <td>@(task.CreatedAt?.ToString("MMM dd, yyyy HH:mm:ss") ?? "-")</td>
+                                         <td>@(task.StartedAt?.ToString("MMM dd, yyyy HH:mm:ss") ?? "-")</td>
+                                         <td>@(task.CompletedAt?.ToString("MMM dd, yyyy HH:mm:ss") ?? "-")</td>
                                         <td class="text-center">
                                             @if(task.StatusName != "Done")
                                             {
                                                 <form method="post" asp-page-handler="UpdateStatus" class="d-inline">
                                                     <input type="hidden" name="taskId" value="@task.Id" />
                                                     @if(task.StatusName == "ToDo"){
-                                                        <input type="hidden" name="newStatus" value="2" />
+                                                        <input type="hidden" name="newStatus" value="1" />
                                                         <button type="submit" class="btn btn-outline-primary btn-sm">Start</button>
                                                     }
                                                     else if(task.StatusName == "InProgress"){
