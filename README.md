@@ -1,5 +1,8 @@
 # ProjectManagement
 Note: This was developed within a short duration. Looking forward make it more rich features.
+
+Note: For authenticatin setup, please follow keycloak-setup.md file.
+
 Admin > 
 <img width="1180" height="897" alt="image" src="https://github.com/user-attachments/assets/ecca7410-e700-4160-95bc-d083a0062b98" />
 <img width="1681" height="919" alt="image" src="https://github.com/user-attachments/assets/0a3bf0e2-f045-4b52-bd4f-41a5af0ceef4" />
