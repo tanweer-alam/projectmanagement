@@ -32,5 +32,17 @@ namespace ProjectManagement.Domain.Entities
         public bool IsAdmin => Role == UserRole.Admin;
         public string FullName => $"{FirstName} {LastName}";
 
+        public static User Create(string email, string firstName, string lastName, UserRole role = UserRole.Employee)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                throw new ArgumentException("Email cannot be empty", nameof(email));
+            if (string.IsNullOrWhiteSpace(firstName))
+                throw new ArgumentException("First name cannot be empty", nameof(firstName));
+            if (string.IsNullOrWhiteSpace(lastName))
+                throw new ArgumentException("Last name cannot be empty", nameof(lastName));
+
+            return new User(Guid.NewGuid(), email.ToLowerInvariant().Trim(), firstName.Trim(),
+                lastName.Trim(), role);
+        }
     }
 }
