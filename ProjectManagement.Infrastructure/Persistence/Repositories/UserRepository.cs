@@ -51,9 +51,9 @@ namespace ProjectManagement.Infrastructure.Persistence.Repositories
             return _dbContext.Users.AnyAsync(u => u.Email == email.ToLowerInvariant(), cancellationToken);
         }
 
-        public async Task AddAsync(User user, CancellationToken cancellationToken = default)
+        public void Add(User user, CancellationToken cancellationToken = default)
         {
-            await _dbContext.Users.AddAsync(user, cancellationToken);
+            _dbContext.Users.Add(user);
         }
 
         public void Update(User user)

@@ -16,7 +16,7 @@ namespace ProjectManagement.Domain.Interfaces
         Task<IEnumerable<User>> GetByRoleAsync(UserRole role, CancellationToken cancellationToken = default);
         Task<IEnumerable<User>> GetAllEmployeesAsync(CancellationToken cancellationToken = default);
         Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken = default);
-        Task AddAsync(User user, CancellationToken cancellationToken = default);
+        void Add(User user, CancellationToken cancellationToken = default);
         void Update(User user);
         void Remove(User user);
     }

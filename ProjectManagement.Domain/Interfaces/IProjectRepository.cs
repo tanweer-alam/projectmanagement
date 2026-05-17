@@ -13,7 +13,7 @@ namespace ProjectManagement.Domain.Interfaces
         Task<IEnumerable<Project>> GetAllWithTasksAsync(CancellationToken cancellationToken = default);
         Task<IEnumerable<Project>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<IEnumerable<Project>> GetByOwnerIdAsync(Guid ownerId, CancellationToken cancellationToken = default);
-        Task AddAsync(Project project, CancellationToken cancellationToken = default);
+        void Add(Project project, CancellationToken cancellationToken = default);
         void Update(Project project);
         void Remove(Project project);
     }

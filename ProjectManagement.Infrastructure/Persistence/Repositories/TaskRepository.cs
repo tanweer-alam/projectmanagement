@@ -60,9 +60,9 @@ namespace ProjectManagement.Infrastructure.Persistence.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task AddAsync(TaskItem taskItem, CancellationToken cancellationToken = default)
+        public void Add(TaskItem taskItem, CancellationToken cancellationToken = default)
         {
-            await _dbContext.Tasks.AddAsync(taskItem, cancellationToken);
+            _dbContext.Tasks.Add(taskItem);
         }
 
         public void Update(TaskItem taskItem)

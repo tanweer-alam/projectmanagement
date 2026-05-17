@@ -56,9 +56,9 @@ namespace ProjectManagement.Infrastructure.Persistence.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task AddAsync(Project project, CancellationToken cancellationToken = default)
+        public void Add(Project project, CancellationToken cancellationToken = default)
         {
-            await _dbContext.Projects.AddAsync(project, cancellationToken);
+            _dbContext.Projects.Add(project);
         }
 
         public void Update(Project project)
