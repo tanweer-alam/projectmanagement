@@ -1,8 +1,11 @@
 # ProjectManagement
 
-<img width="1661" height="968" alt="image" src="https://github.com/user-attachments/assets/93f0608d-d49a-44b9-8e0e-690279099349" />
+Admin > 
+<img width="1180" height="897" alt="image" src="https://github.com/user-attachments/assets/ecca7410-e700-4160-95bc-d083a0062b98" />
+<img width="1681" height="919" alt="image" src="https://github.com/user-attachments/assets/0a3bf0e2-f045-4b52-bd4f-41a5af0ceef4" />
+<img width="1783" height="905" alt="image" src="https://github.com/user-attachments/assets/8a94bcc9-577c-4e7e-94a2-8976d3664798" />
 
-<img width="1547" height="932" alt="image" src="https://github.com/user-attachments/assets/85447d7d-3073-450c-8125-b053ea25280f" />
+Employee >
+<img width="1446" height="914" alt="image" src="https://github.com/user-attachments/assets/99186f12-118f-4631-aca9-10a6a1142862" />
 
-<img width="1302" height="913" alt="image" src="https://github.com/user-attachments/assets/35ba5109-3328-453d-b43b-b4c96b55cdf1" />
 
