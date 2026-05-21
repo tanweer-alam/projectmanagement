@@ -125,3 +125,32 @@ For a GitHub-hosted project, prefer storing `ClientSecret` in user secrets, envi
 - Authorization endpoint: `http://localhost:8080/realms/project-management/protocol/openid-connect/auth`
 - Token endpoint: `http://localhost:8080/realms/project-management/protocol/openid-connect/token`
 
+
+1. User visits protected page
+   ↓
+2. Authentication needed → Challenge issued
+   ↓
+3. DefaultChallengeScheme = Cookie handles it
+   ↓
+4. Cookie scheme redirects to LoginPath: /Account/Login
+   ↓
+5. ✅ Your LoginModel.OnGet() EXECUTES
+   ↓
+6. You call Challenge(OpenIdConnectDefaults.AuthenticationScheme)
+   ↓
+7. Then redirects to Keycloak
+8. User enters credentials in Keycloak
+   ↓
+9. Keycloak returns: authorization code
+   ↓
+10. Exchange code for tokens (ID token + Access token)
+   ↓
+11. TokenValidated event fires
+   ├─ ProvisionOrRefreshUserAsync() → Create/update user in DB
+
+   ↓
+12. Create session cookie (valid for 1 hour)
+   ↓
+13. Redirect back to original page
+   ↓
+14. User logged in! ✅
