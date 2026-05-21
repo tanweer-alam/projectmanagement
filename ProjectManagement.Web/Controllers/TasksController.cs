@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Application.Tasks.Commands;
 using ProjectManagement.Application.Tasks.Queries;
+using ProjectManagement.Application.Users.Queries;
+using ProjectManagement.Application.DTOs;
 using ProjectManagement.Domain.Enums;
 using ProjectManagement.Domain.Interfaces;
 using System.Security.Claims;
@@ -15,16 +17,13 @@ namespace ProjectManagement.Web.Controllers
     public class TasksController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IUserRepository _userRepository;
         private readonly ITaskRepository _taskRepository;
 
         public TasksController(
             IMediator mediator,
-            IUserRepository userRepository,
             ITaskRepository taskRepository)
         {
             _mediator = mediator;
-            _userRepository = userRepository;
             _taskRepository = taskRepository;
         }
 
@@ -103,14 +102,25 @@ namespace ProjectManagement.Web.Controllers
             }
         }
 
-        private async Task<ProjectManagement.Domain.Entities.User?> GetCurrentUserAsync(CancellationToken cancellationToken)
+        private async Task<UserDto?> GetCurrentUserAsync(CancellationToken cancellationToken)
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value
                 ?? User.FindFirst("email")?.Value;
 
-            return string.IsNullOrWhiteSpace(email)
-                ? null
-                : await _userRepository.GetByEmailAsync(email.ToLowerInvariant(), cancellationToken);
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return null;
+            }
+
+            try
+            {
+                var user = await _mediator.Send(new GetUserByEmailQuery(email.ToLowerInvariant()), cancellationToken);
+                return user;
+            }
+            catch (KeyNotFoundException)
+            {
+                return null;
+            }
         }
     }
 }
